@@ -3,7 +3,7 @@ package curves
 import (
 	"math"
 
-	c "github.com/vistormu/go-dsa/constraints"
+	c "github.com/kamjapowered/bbq/constraints"
 )
 
 // logistic sigmoid normalized so that compute(0) = 0 and compute(1) = 1

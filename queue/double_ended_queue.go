@@ -5,6 +5,8 @@ import "iter"
 // store elements in a double ended fifo structure using a ring buffer
 //
 // this type is not safe for concurrent use
+//
+//microwave:export
 type Deque[T any] struct {
 	data []T
 	head int
@@ -14,6 +16,8 @@ type Deque[T any] struct {
 // create an empty deque
 //
 // time: O(1)
+//
+//microwave:export
 func NewDeque[T any]() *Deque[T] {
 	return &Deque[T]{}
 }

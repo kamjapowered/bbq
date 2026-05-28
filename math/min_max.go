@@ -1,12 +1,14 @@
 package math
 
-import c "github.com/vistormu/go-dsa/constraints"
+import c "github.com/kamjapowered/bbq/constraints"
 
 // return the minimum and maximum value in values
 //
 // return 0, 0 if values is empty
 //
 // time: O(n)
+//
+//microwave:export
 func MinMax[T c.Number](values []T) (T, T) {
 	if len(values) == 0 {
 		return 0, 0

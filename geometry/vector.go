@@ -3,15 +3,19 @@ package geometry
 import (
 	"math"
 
-	c "github.com/vistormu/go-dsa/constraints"
+	c "github.com/kamjapowered/bbq/constraints"
 )
 
 // store a 3d vector where z can be left as zero for 2d usage
+//
+//microwave:export
 type Vector[T c.Number] struct {
 	X, Y, Z T
 }
 
 // create a vector up until the specified dimension
+//
+//microwave:export
 func NewVector[T c.Number](v ...T) Vector[T] {
 	vec := Vector[T]{}
 

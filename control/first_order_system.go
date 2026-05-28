@@ -1,6 +1,6 @@
 package control
 
-import c "github.com/vistormu/go-dsa/constraints"
+import c "github.com/kamjapowered/bbq/constraints"
 
 // simulate a first order siso lti system in state space form
 //

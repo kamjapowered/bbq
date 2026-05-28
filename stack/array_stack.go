@@ -5,6 +5,8 @@ import "iter"
 // store elements in lifo order using a slice as backing storage
 //
 // this type is not safe for concurrent use
+//
+//microwave:export
 type Stack[T any] struct {
 	data []T
 }
@@ -12,6 +14,8 @@ type Stack[T any] struct {
 // create an empty stack
 //
 // time: O(1)
+//
+//microwave:export
 func NewStack[T any]() *Stack[T] {
 	return &Stack[T]{}
 }

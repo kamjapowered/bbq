@@ -1,14 +1,18 @@
 package geometry
 
-import c "github.com/vistormu/go-dsa/constraints"
+import c "github.com/kamjapowered/bbq/constraints"
 
 // store a ray as origin plus direction vector
+//
+//microwave:export
 type Ray[T c.Number] struct {
 	Origin    Vector[T]
 	Direction Vector[T]
 }
 
 // create a ray from two points
+//
+//microwave:export
 func NewRay[T c.Number](origin, through Vector[T]) Ray[T] {
 	return Ray[T]{
 		Origin:    origin,

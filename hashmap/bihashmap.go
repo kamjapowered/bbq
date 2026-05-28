@@ -8,6 +8,8 @@ import "iter"
 // putting an existing value replaces its key
 //
 // this type is not safe for concurrent use
+//
+//microwave:export
 type BiHashmap[K, V comparable] struct {
 	fwd map[K]V
 	rev map[V]K
@@ -16,6 +18,8 @@ type BiHashmap[K, V comparable] struct {
 // create an empty bimap
 //
 // time: O(1)
+//
+//microwave:export
 func NewBiHashmap[K, V comparable]() *BiHashmap[K, V] {
 	return &BiHashmap[K, V]{
 		fwd: make(map[K]V),

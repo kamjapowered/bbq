@@ -1,8 +1,8 @@
 package curves
 
 import (
-	c "github.com/vistormu/go-dsa/constraints"
-	"github.com/vistormu/go-dsa/geometry"
+	c "github.com/kamjapowered/bbq/constraints"
+	"github.com/kamjapowered/bbq/geometry"
 )
 
 // cubic hermite segment between p0 and p1 with tangents m0 and m1

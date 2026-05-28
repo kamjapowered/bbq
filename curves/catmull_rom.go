@@ -3,8 +3,8 @@ package curves
 import (
 	"math"
 
-	c "github.com/vistormu/go-dsa/constraints"
-	"github.com/vistormu/go-dsa/geometry"
+	c "github.com/kamjapowered/bbq/constraints"
+	"github.com/kamjapowered/bbq/geometry"
 )
 
 // uniform catmull rom spline through n points, n >= 4

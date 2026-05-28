@@ -7,6 +7,8 @@ import "iter"
 // pushing an existing element moves it to the top
 //
 // this type is not safe for concurrent use
+//
+//microwave:export
 type UniqueStack[T comparable] struct {
 	head   *dnode[T]
 	tail   *dnode[T]
@@ -23,6 +25,8 @@ type dnode[T comparable] struct {
 // create an empty unique stack
 //
 // time: O(1)
+//
+//microwave:export
 func NewUniqueStack[T comparable]() *UniqueStack[T] {
 	return &UniqueStack[T]{index: make(map[T]*dnode[T])}
 }

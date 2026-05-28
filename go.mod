@@ -1,4 +1,4 @@
-module github.com/vistormu/go-dsa
+module github.com/kamjapowered/bbq
 
 go 1.25.2
 

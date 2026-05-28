@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/vistormu/go-dsa/terminal"
+	"github.com/kamjapowered/bbq/terminal"
 )
 
 type Kind string

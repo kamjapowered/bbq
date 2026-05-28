@@ -1,8 +1,8 @@
 package curves
 
 import (
-	c "github.com/vistormu/go-dsa/constraints"
-	"github.com/vistormu/go-dsa/geometry"
+	c "github.com/kamjapowered/bbq/constraints"
+	"github.com/kamjapowered/bbq/geometry"
 )
 
 // bezier curve of arbitrary degree evaluated with de casteljau

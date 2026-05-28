@@ -3,7 +3,7 @@ package curves
 import (
 	"math"
 
-	c "github.com/vistormu/go-dsa/constraints"
+	c "github.com/kamjapowered/bbq/constraints"
 )
 
 // single threshold step

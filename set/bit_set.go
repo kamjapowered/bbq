@@ -5,6 +5,8 @@ import "iter"
 // store membership of non negative integers using a bitset
 //
 // this type is not safe for concurrent use
+//
+//microwave:export
 type BitSet struct {
 	words []uint64
 	size  int
@@ -13,6 +15,8 @@ type BitSet struct {
 // create an empty bitset
 //
 // time: O(1)
+//
+//microwave:export
 func NewBitSet() *BitSet {
 	return &BitSet{}
 }

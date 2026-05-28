@@ -3,18 +3,22 @@ package geometry
 import (
 	"iter"
 
-	c "github.com/vistormu/go-dsa/constraints"
+	c "github.com/kamjapowered/bbq/constraints"
 )
 
 // store a path as ordered points in local space
 //
 // interpret as 2d on the xy plane
+//
+//microwave:export
 type Path[T c.Number] struct {
 	Points []Vector[T]
 	Closed bool
 }
 
 // create an empty path
+//
+//microwave:export
 func NewPath[T c.Number]() Path[T] {
 	return Path[T]{Points: make([]Vector[T], 0)}
 }

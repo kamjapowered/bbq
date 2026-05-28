@@ -1,14 +1,18 @@
 package geometry
 
-import c "github.com/vistormu/go-dsa/constraints"
+import c "github.com/kamjapowered/bbq/constraints"
 
 // store a capsule as a segment plus radius
+//
+//microwave:export
 type Capsule[T c.Number] struct {
 	Segment Segment[T]
 	Radius  T
 }
 
 // create a capsule
+//
+//microwave:export
 func NewCapsule[T c.Number](seg Segment[T], radius T) Capsule[T] {
 	return Capsule[T]{Segment: seg, Radius: radius}
 }

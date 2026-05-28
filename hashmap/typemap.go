@@ -11,12 +11,16 @@ import (
 // store values as pointers to their base type to allow in place mutation
 //
 // allow at most one value per base type
+//
+//microwave:export
 type TypeMap struct {
 	mu   sync.RWMutex
 	data map[reflect.Type]any
 }
 
 // create an empty typemap
+//
+//microwave:export
 func NewTypeMap() *TypeMap {
 	return &TypeMap{
 		data: make(map[reflect.Type]any),
@@ -119,7 +123,9 @@ func baseType(t reflect.Type) reflect.Type {
 // require T to be a non pointer type
 //
 // store the value as *T
-func Add[T any](tm *TypeMap, v T) bool {
+//
+//microwave:export
+func TypeMapSet[T any](tm *TypeMap, v T) bool {
 	rt := reflect.TypeFor[T]()
 	if rt.Kind() == reflect.Pointer {
 		return false
@@ -140,7 +146,9 @@ func Add[T any](tm *TypeMap, v T) bool {
 // require T to be a non pointer type
 //
 // return false if the entry does not exist or the cast fails
-func Get[T any](tm *TypeMap) (*T, bool) {
+//
+//microwave:export
+func TypeMapGet[T any](tm *TypeMap) (*T, bool) {
 	rt := reflect.TypeFor[T]()
 	if rt.Kind() == reflect.Pointer {
 		return nil, false
@@ -160,7 +168,9 @@ func Get[T any](tm *TypeMap) (*T, bool) {
 // remove deletes the entry for the base type T
 //
 // require T to be a non pointer type
-func Remove[T any](tm *TypeMap) bool {
+//
+//microwave:export
+func TypeMapRemove[T any](tm *TypeMap) bool {
 	rt := reflect.TypeFor[T]()
 	if rt.Kind() == reflect.Pointer {
 		return false
@@ -178,7 +188,9 @@ func Remove[T any](tm *TypeMap) bool {
 // checks the existance of T in the TypeMap
 //
 // require T to be a non pointer type
-func Has[T any](tm *TypeMap) bool {
+//
+//microwave:export
+func TypeMapHas[T any](tm *TypeMap) bool {
 	rt := reflect.TypeFor[T]()
 	if rt.Kind() == reflect.Pointer {
 		return false
@@ -195,10 +207,12 @@ func Has[T any](tm *TypeMap) bool {
 // reflection functions
 // ====================
 
-// addbytype stores v under the base type of t
+// stores v under the base type of t
 //
 // accept v as either base value or pointer to base value
-func AddByType(tm *TypeMap, v any, t reflect.Type) bool {
+//
+//microwave:export
+func TypeMapAddByType(tm *TypeMap, v any, t reflect.Type) bool {
 	if tm == nil || v == nil || t == nil {
 		return false
 	}
@@ -242,8 +256,10 @@ func AddByType(tm *TypeMap, v any, t reflect.Type) bool {
 	return false
 }
 
-// getbytype retrieves the stored pointer for the base type of t
-func GetByType(tm *TypeMap, t reflect.Type) (any, bool) {
+// retrieves the stored pointer for the base type of t
+//
+//microwave:export
+func TypeMapGetByType(tm *TypeMap, t reflect.Type) (any, bool) {
 	if tm == nil || t == nil {
 		return nil, false
 	}
@@ -257,8 +273,10 @@ func GetByType(tm *TypeMap, t reflect.Type) (any, bool) {
 	return raw, ok
 }
 
-// deletebytype removes the entry keyed by the base type of t
-func DeleteByType(tm *TypeMap, t reflect.Type) bool {
+// removes the entry keyed by the base type of t
+//
+//microwave:export
+func TypeMapRemoveByType(tm *TypeMap, t reflect.Type) bool {
 	if tm == nil || t == nil {
 		return false
 	}

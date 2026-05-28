@@ -1,15 +1,19 @@
 package geometry
 
-import c "github.com/vistormu/go-dsa/constraints"
+import c "github.com/kamjapowered/bbq/constraints"
 
 // store a polygon as points in local space
 //
 // interpret as 2d on the xy plane
+//
+//microwave:export
 type Polygon[T c.Number] struct {
 	Points []Vector[T]
 }
 
 // create an empty polygon
+//
+//microwave:export
 func NewPolygon[T c.Number]() Polygon[T] {
 	return Polygon[T]{Points: make([]Vector[T], 0)}
 }

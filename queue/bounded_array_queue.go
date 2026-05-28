@@ -5,6 +5,8 @@ import "iter"
 // store up to a fixed number of elements in fifo order
 //
 // this type is not safe for concurrent use
+//
+//microwave:export
 type BoundedQueue[T any] struct {
 	data     []T
 	head     int
@@ -18,6 +20,8 @@ type BoundedQueue[T any] struct {
 // if capacity is less than or equal to zero, create an empty queue that rejects enqueues
 //
 // time: O(n) due to allocation
+//
+//microwave:export
 func NewBoundedQueue[T any](capacity int) *BoundedQueue[T] {
 	if capacity <= 0 {
 		return &BoundedQueue[T]{}

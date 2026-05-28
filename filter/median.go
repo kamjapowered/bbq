@@ -3,7 +3,7 @@ package filter
 import (
 	"slices"
 
-	c "github.com/vistormu/go-dsa/constraints"
+	c "github.com/kamjapowered/bbq/constraints"
 )
 
 // compute a sliding window median

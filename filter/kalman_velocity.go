@@ -3,7 +3,7 @@ package filter
 import (
 	"math"
 
-	c "github.com/vistormu/go-dsa/constraints"
+	c "github.com/kamjapowered/bbq/constraints"
 )
 
 // estimate position and velocity from scalar position measurements

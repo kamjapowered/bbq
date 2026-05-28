@@ -1,6 +1,6 @@
 package control
 
-import c "github.com/vistormu/go-dsa/constraints"
+import c "github.com/kamjapowered/bbq/constraints"
 
 // produce a ramp reference after an optional delay
 type Ramp[T c.Number] struct {

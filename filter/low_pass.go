@@ -1,6 +1,6 @@
 package filter
 
-import c "github.com/vistormu/go-dsa/constraints"
+import c "github.com/kamjapowered/bbq/constraints"
 
 // smooth a signal with a first order low pass filter
 //

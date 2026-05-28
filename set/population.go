@@ -1,7 +1,7 @@
 package set
 
 import (
-	"github.com/vistormu/go-dsa/queue"
+	"github.com/kamjapowered/bbq/queue"
 )
 
 // ======
@@ -14,6 +14,8 @@ import (
 //
 // the tag parameter gives nominal typing so ids from different domains do not
 // mix (for example, entity and asset).
+//
+//microwave:export
 type Member[Tag any] uint64
 
 // pack an index and a generation into a member.
@@ -58,6 +60,8 @@ func (m Member[Tag]) Zero() bool {
 // population. this makes the zero value useful as an "unset" id.
 //
 // this type is not safe for concurrent use.
+//
+//microwave:export
 type Population[Tag any] struct {
 	free  *queue.Queue[uint32]
 	gens  []uint32
@@ -67,6 +71,8 @@ type Population[Tag any] struct {
 // create an empty population.
 //
 // time: O(1)
+//
+//microwave:export
 func NewPopulation[Tag any]() *Population[Tag] {
 	return &Population[Tag]{
 		free:  queue.NewQueue[uint32](),

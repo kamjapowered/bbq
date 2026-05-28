@@ -7,6 +7,8 @@ import "iter"
 // less(a, b) must return true if a has higher priority than b
 //
 // this type is not safe for concurrent use
+//
+//microwave:export
 type PriorityQueue[T any] struct {
 	data []T
 	less func(a, b T) bool
@@ -15,6 +17,8 @@ type PriorityQueue[T any] struct {
 // create an empty priority queue
 //
 // time: O(1)
+//
+//microwave:export
 func NewPriorityQueue[T any](less func(a, b T) bool) *PriorityQueue[T] {
 	return &PriorityQueue[T]{
 		less: less,

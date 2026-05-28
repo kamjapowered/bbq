@@ -5,6 +5,8 @@ import "iter"
 // store unique elements using a hash table
 //
 // this type is not safe for concurrent use
+//
+//microwave:export
 type HashSet[T comparable] struct {
 	data map[T]struct{}
 }
@@ -12,6 +14,8 @@ type HashSet[T comparable] struct {
 // create an empty set
 //
 // time: O(1)
+//
+//microwave:export
 func NewHashSet[T comparable]() *HashSet[T] {
 	return &HashSet[T]{data: make(map[T]struct{})}
 }

@@ -1,7 +1,7 @@
 package sort
 
 import (
-	"github.com/vistormu/go-dsa/constraints"
+	"github.com/kamjapowered/bbq/constraints"
 	"testing"
 )
 

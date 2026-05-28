@@ -5,6 +5,8 @@ import "iter"
 // store elements in fifo order using a fixed size ring buffer
 //
 // this type is not safe for concurrent use
+//
+//microwave:export
 type RingQueue[T any] struct {
 	data []T
 	head int
@@ -18,6 +20,8 @@ type RingQueue[T any] struct {
 // and will reject all enqueue operations
 //
 // time: O(n) due to allocation
+//
+//microwave:export
 func NewRingQueue[T any](capacity int) *RingQueue[T] {
 	if capacity <= 0 {
 		return &RingQueue[T]{}

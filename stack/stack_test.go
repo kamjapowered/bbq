@@ -6,24 +6,24 @@ import (
 
 type ustack[T comparable] interface {
 	Push(T)
-	Pop() (T, error)
-	Peek() (T, error)
-	IsEmpty() bool
-	Length() int
+	Pop() (T, bool)
+	Peek() (T, bool)
+	Empty() bool
+	Len() int
 	Clear()
 }
 
 var factories = map[string]func() ustack[int]{
-	"UniqueStack":     func() ustack[int] { return NewUniqueStack[int]() },
-	"StackArray":      func() ustack[int] { return NewStackArray[int]() },
-	"StackLinkedList": func() ustack[int] { return NewStackLinkedList[int]() },
+	"UniqueStack": func() ustack[int] { return NewUniqueStack[int]() },
+	"Stack":       func() ustack[int] { return NewStack[int]() },
+	"LinkedStack": func() ustack[int] { return NewLinkedStack[int]() },
 }
 
 func mustPop(t *testing.T, s ustack[int]) int {
 	t.Helper()
-	v, err := s.Pop()
-	if err != nil {
-		t.Fatalf("Pop returned error: %v", err)
+	v, ok := s.Pop()
+	if !ok {
+		t.Fatal("Pop failed")
 	}
 	return v
 }
@@ -38,8 +38,8 @@ func TestPushPopPeekAndLength(t *testing.T) {
 				s.Push(v)
 			}
 
-			if got, want := s.Length(), len(values); got != want {
-				t.Fatalf("Length = %d, want %d", got, want)
+			if got, want := s.Len(), len(values); got != want {
+				t.Fatalf("Len = %d, want %d", got, want)
 			}
 
 			if top, _ := s.Peek(); top != 3 {
@@ -53,7 +53,7 @@ func TestPushPopPeekAndLength(t *testing.T) {
 				}
 			}
 
-			if !s.IsEmpty() {
+			if !s.Empty() {
 				t.Fatal("stack should be empty after popping everything")
 			}
 		})
@@ -83,7 +83,7 @@ func TestDuplicatePromotion(t *testing.T) {
 				}
 			}
 
-			if !s.IsEmpty() {
+			if !s.Empty() {
 				t.Fatal("stack should be empty after popping everything")
 			}
 		})
@@ -98,16 +98,16 @@ func TestClearAndErrorCases(t *testing.T) {
 			s.Push(99)
 			s.Clear()
 
-			if !s.IsEmpty() || s.Length() != 0 {
+			if !s.Empty() || s.Len() != 0 {
 				t.Fatal("Clear() did not reset the stack")
 			}
 
-			if _, err := s.Pop(); err == nil {
-				t.Fatal("expected error when popping from empty stack, got nil")
+			if _, ok := s.Pop(); ok {
+				t.Fatal("expected pop from empty stack to fail")
 			}
 
-			if _, err := s.Peek(); err == nil {
-				t.Fatal("expected error when peeking into empty stack, got nil")
+			if _, ok := s.Peek(); ok {
+				t.Fatal("expected peek into empty stack to fail")
 			}
 		})
 	}

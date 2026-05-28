@@ -1,6 +1,6 @@
 package filter
 
-import c "github.com/vistormu/go-dsa/constraints"
+import c "github.com/kamjapowered/bbq/constraints"
 
 // estimate a scalar signal with a 1d kalman filter
 //

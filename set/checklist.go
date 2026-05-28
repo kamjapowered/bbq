@@ -3,6 +3,8 @@ package set
 // track completion of a fixed set of required keys
 //
 // this type is not safe for concurrent use
+//
+//microwave:export
 type Checklist[K comparable] struct {
 	required *HashSet[K]
 	checked  *HashSet[K]
@@ -11,6 +13,8 @@ type Checklist[K comparable] struct {
 // create a checklist with the given required keys
 //
 // time: O(n)
+//
+//microwave:export
 func NewChecklist[K comparable](required ...K) *Checklist[K] {
 	req := NewHashSet[K]()
 	for _, k := range required {

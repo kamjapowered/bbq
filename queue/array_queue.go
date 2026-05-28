@@ -7,6 +7,8 @@ import (
 // store elements in fifo order using a ring buffer.
 //
 // this type is not safe for concurrent use.
+//
+//microwave:export
 type Queue[T any] struct {
 	data []T
 	head int
@@ -16,6 +18,8 @@ type Queue[T any] struct {
 // create an empty queue.
 //
 // time: O(1)
+//
+//microwave:export
 func NewQueue[T any]() *Queue[T] {
 	return &Queue[T]{}
 }

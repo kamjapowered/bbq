@@ -1,12 +1,14 @@
 package math
 
-import c "github.com/vistormu/go-dsa/constraints"
+import c "github.com/kamjapowered/bbq/constraints"
 
 // return the population variance of values
 //
 // return 0 if values is empty
 //
 // time: O(n)
+//
+//microwave:export
 func Variance[T c.Float](values []T) T {
 	if len(values) == 0 {
 		return 0

@@ -5,6 +5,8 @@ import "iter"
 // store values in a dense slice while providing O(1) lookup by key.
 //
 // this type is not safe for concurrent use.
+//
+//microwave:export
 type DenseMap[K comparable, V any] struct {
 	dense    []K
 	values   []V
@@ -14,6 +16,8 @@ type DenseMap[K comparable, V any] struct {
 // create an empty densemap.
 //
 // time: O(1)
+//
+//microwave:export
 func NewDenseMap[K comparable, V any]() *DenseMap[K, V] {
 	return &DenseMap[K, V]{
 		dense:    make([]K, 0),

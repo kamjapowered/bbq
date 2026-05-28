@@ -3,7 +3,7 @@ package control
 import (
 	"math"
 
-	c "github.com/vistormu/go-dsa/constraints"
+	c "github.com/kamjapowered/bbq/constraints"
 )
 
 // generate a square reference signal

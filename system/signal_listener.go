@@ -10,6 +10,8 @@ import (
 // listen for os signals and expose them through a channel
 //
 // this type is not safe for concurrent construction, but safe for concurrent use
+//
+//microwave:export
 type SignalListener struct {
 	ch   chan os.Signal
 	once sync.Once
@@ -20,6 +22,8 @@ type SignalListener struct {
 // if no signals are provided, it listens for sigint and sigterm
 //
 // time: O(1)
+//
+//microwave:export
 func NewSignalListener(signals ...os.Signal) *SignalListener {
 	if len(signals) == 0 {
 		signals = []os.Signal{syscall.SIGINT, syscall.SIGTERM}
