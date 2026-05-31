@@ -1,9 +1,12 @@
-version := "0.1.0"
+version := "0.1.1"
 
 test:
 	GOCACHE={{justfile_directory()}}/.cache/go-build go test ./...
 
-release: test
+microwave:
+	microwave ./... --out bbq.go --pkg bbq
+
+release: test microwave
 	git diff --check
 	git status --short
 	git add .

@@ -212,7 +212,7 @@ func TypeMapHas[T any](tm *TypeMap) bool {
 // accept v as either base value or pointer to base value
 //
 //microwave:export
-func TypeMapAddByType(tm *TypeMap, v any, t reflect.Type) bool {
+func TypeMapSetByType(tm *TypeMap, v any, t reflect.Type) bool {
 	if tm == nil || v == nil || t == nil {
 		return false
 	}

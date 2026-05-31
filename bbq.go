@@ -9,9 +9,11 @@ import (
 	"github.com/kamjapowered/bbq/functional"
 	"github.com/kamjapowered/bbq/geometry"
 	"github.com/kamjapowered/bbq/hashmap"
+	"github.com/kamjapowered/bbq/log"
 	"github.com/kamjapowered/bbq/math"
 	"github.com/kamjapowered/bbq/queue"
 	"github.com/kamjapowered/bbq/set"
+	"github.com/kamjapowered/bbq/sort"
 	"github.com/kamjapowered/bbq/stack"
 	"github.com/kamjapowered/bbq/system"
 	"os"
@@ -171,13 +173,6 @@ func NewTypeMap() *TypeMap { return hashmap.NewTypeMap() }
 // allow at most one value per base type
 type TypeMap = hashmap.TypeMap
 
-// stores v under the base type of t
-//
-// accept v as either base value or pointer to base value
-func TypeMapAddByType(tm *TypeMap, v any, t reflect.Type) bool {
-	return hashmap.TypeMapAddByType(tm, v, t)
-}
-
 // get retrieves the stored pointer for the base type T
 //
 // require T to be a non pointer type
@@ -209,6 +204,61 @@ func TypeMapRemoveByType(tm *TypeMap, t reflect.Type) bool { return hashmap.Type
 //
 // store the value as *T
 func TypeMapSet[T any](tm *TypeMap, v T) bool { return hashmap.TypeMapSet(tm, v) }
+
+// stores v under the base type of t
+//
+// accept v as either base value or pointer to base value
+func TypeMapSetByType(tm *TypeMap, v any, t reflect.Type) bool {
+	return hashmap.TypeMapSetByType(tm, v, t)
+}
+
+// ===
+// log
+// ===
+
+// store structured metadata for a record
+type Field = log.Field
+
+// intended for development diagnostics
+const LogDebug = log.LogDebug
+
+// intended for failures that affect behaviour
+const LogError = log.LogError
+
+// intended for unrecoverable failures. it does not exit the process, it only records the message
+const LogFatal = log.LogFatal
+
+// store log records and forward them to sinks
+//
+// records are kept in fifo order up to the configured maximum
+//
+// this type is not safe for concurrent use
+type Logger = log.Logger
+
+// intended for high level engine or game state messages
+const LogInfo = log.LogInfo
+
+// the severity level used by the logger
+type LogLevel = log.LogLevel
+
+// the highest defined log level
+const LogMaxLevel = log.LogMaxLevel
+
+// provide option helpers for log records
+var LogOpt = log.LogOpt
+
+// intended for unexpected but recoverable situations
+const LogWarning = log.LogWarning
+
+// create a logger that keeps at most maxRecords records
+//
+// if maxRecords is less than or equal to zero, records are not retained
+//
+// time: O(n) due to allocation
+func NewLogger(maxRecords int) *Logger { return log.NewLogger(maxRecords) }
+
+// describe one log entry
+type Record = log.Record
 
 // ====
 // math
@@ -407,6 +457,28 @@ func NewPopulation[Tag any]() *Population[Tag] { return set.NewPopulation[Tag]()
 //
 // this type is not safe for concurrent use.
 type Population[Tag any] = set.Population[Tag]
+
+// ====
+// sort
+// ====
+
+// describe a directed dependency from one node to another
+//
+// From must appear before To in a topological order
+type Edge[T comparable] = sort.Edge[T]
+
+// return a topological order for nodes
+//
+// nodes must not contain duplicates
+// edges whose endpoints are not present in nodes are ignored
+// duplicate edges are collapsed
+// self edges are ignored
+// return false if the graph contains a cycle
+//
+// time: O(n + e)
+func TopoSort[T comparable](nodes []T, edges []Edge[T]) ([]T, bool) {
+	return sort.TopoSort(nodes, edges)
+}
 
 // =====
 // stack
