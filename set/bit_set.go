@@ -128,7 +128,8 @@ func (b *BitSet) MaxIndex() int {
 
 // iterate over stored indices in increasing order
 //
-// iteration stops if yield returns false
+// an element is removed only after yield accepts it, so stopping early
+// leaves the last yielded element in the set
 //
 // time: O(nwords + k) where k is number of set bits
 func (b *BitSet) Iter() iter.Seq[int] {
@@ -155,20 +156,21 @@ func (b *BitSet) Iter() iter.Seq[int] {
 func (b *BitSet) Drain() iter.Seq[int] {
 	return func(yield func(int) bool) {
 		for wi := range b.words {
-			word := b.words[wi]
-			for word != 0 {
-				lsb := word & -word
-				bit := trailingZeros64(word)
-				idx := wi*64 + bit
+			for {
+				word := b.words[wi]
+				if word == 0 {
+					break
+				}
 
-				b.words[wi] &^= lsb
-				b.size--
+				lsb := word & -word
+				idx := wi*64 + trailingZeros64(word)
 
 				if !yield(idx) {
 					return
 				}
 
-				word = b.words[wi]
+				b.words[wi] &^= lsb
+				b.size--
 			}
 		}
 	}

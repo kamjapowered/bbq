@@ -3,7 +3,7 @@ package curves
 import (
 	"math"
 
-	c "github.com/kamjapowered/bbq/constraints"
+	c "kamjapowered.com/bbq/constraints"
 )
 
 // logistic sigmoid normalized so that compute(0) = 0 and compute(1) = 1
@@ -32,6 +32,10 @@ type Sigmoid[T c.Float] struct {
 func NewSigmoid[T c.Float](k, x0 T) Sigmoid[T] {
 	kf := float64(k)
 	x0f := float64(x0)
+
+	if kf <= 0 {
+		kf = 1
+	}
 
 	r0 := 1 / (1 + math.Exp(kf*x0f))
 	r1 := 1 / (1 + math.Exp(-kf*(1-x0f)))

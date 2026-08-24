@@ -3,7 +3,7 @@ package control
 import (
 	"math"
 
-	c "github.com/kamjapowered/bbq/constraints"
+	c "kamjapowered.com/bbq/constraints"
 )
 
 // generate a square reference signal

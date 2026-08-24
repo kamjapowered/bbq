@@ -166,3 +166,15 @@ func (q *PriorityQueue[T]) down(i int) {
 		i = best
 	}
 }
+
+// copy the elements into a fresh slice in heap order
+//
+// heap order is not priority order; use Drain to consume by priority
+//
+// time: O(n)
+func (q *PriorityQueue[T]) ToSlice() []T {
+	out := make([]T, len(q.data))
+	copy(out, q.data)
+
+	return out
+}

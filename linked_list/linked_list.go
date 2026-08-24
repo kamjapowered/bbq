@@ -155,6 +155,6 @@ func (l *LinkedList[T]) Get(index int) (T, error) {
 	return current.data, nil
 }
 
-func (l *LinkedList[T]) Length() int {
+func (l *LinkedList[T]) Len() int {
 	return l.length
 }

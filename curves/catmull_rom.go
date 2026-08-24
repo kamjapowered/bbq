@@ -3,8 +3,8 @@ package curves
 import (
 	"math"
 
-	c "github.com/kamjapowered/bbq/constraints"
-	"github.com/kamjapowered/bbq/geometry"
+	c "kamjapowered.com/bbq/constraints"
+	"kamjapowered.com/bbq/geometry"
 )
 
 // uniform catmull rom spline through n points, n >= 4

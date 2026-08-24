@@ -31,7 +31,7 @@ func NewDenseMap[K comparable, V any]() *DenseMap[K, V] {
 // overwrite the existing value if k is already present.
 //
 // time: O(1) amortised
-func (m *DenseMap[K, V]) Add(k K, v V) {
+func (m *DenseMap[K, V]) Set(k K, v V) {
 	row, ok := m.location[k]
 	if ok {
 		m.values[row] = v
@@ -63,6 +63,12 @@ func (m *DenseMap[K, V]) Remove(k K) bool {
 
 	m.dense[row] = m.dense[last]
 	m.values[row] = m.values[last]
+
+	var zeroK K
+	var zeroV V
+
+	m.dense[last] = zeroK
+	m.values[last] = zeroV
 
 	m.dense = m.dense[:last]
 	m.values = m.values[:last]

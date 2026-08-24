@@ -5,19 +5,18 @@
 package bbq
 
 import (
-	"github.com/kamjapowered/bbq/constraints"
-	"github.com/kamjapowered/bbq/functional"
-	"github.com/kamjapowered/bbq/geometry"
-	"github.com/kamjapowered/bbq/hashmap"
-	"github.com/kamjapowered/bbq/log"
-	"github.com/kamjapowered/bbq/math"
-	"github.com/kamjapowered/bbq/queue"
-	"github.com/kamjapowered/bbq/set"
-	"github.com/kamjapowered/bbq/sort"
-	"github.com/kamjapowered/bbq/stack"
-	"github.com/kamjapowered/bbq/system"
+	"kamjapowered.com/bbq/constraints"
+	"kamjapowered.com/bbq/functional"
+	"kamjapowered.com/bbq/geometry"
+	"kamjapowered.com/bbq/hashmap"
+	"kamjapowered.com/bbq/log"
+	"kamjapowered.com/bbq/math"
+	"kamjapowered.com/bbq/queue"
+	"kamjapowered.com/bbq/set"
+	"kamjapowered.com/bbq/sort"
+	"kamjapowered.com/bbq/stack"
+	"kamjapowered.com/bbq/system"
 	"os"
-	"reflect"
 )
 
 // ===========
@@ -41,6 +40,21 @@ type Unsigned = constraints.Unsigned
 // ==========
 
 func ApplyOptions[T any](v *T, opts ...Option[T]) { functional.ApplyOptions(v, opts...) }
+
+// panic with a located message when cond is false
+//
+// the operands are formatted like fmt.Sprint. the reported location is the
+// caller's, not this package's, so the panic points at the assertion itself
+//
+// time: O(n) where n is the formatted message length
+func Assert(cond bool, a ...any) { functional.Assert(cond, a...) }
+
+// panic with a located, formatted message when cond is false
+//
+// the format string version of Assert
+//
+// time: O(n) where n is the formatted message length
+func AssertF(cond bool, format string, a ...any) { functional.AssertF(cond, format, a...) }
 
 type Option[T any] = functional.Option[T]
 
@@ -146,7 +160,7 @@ type Vector[T Number] = geometry.Vector[T]
 // putting an existing value replaces its key
 //
 // this type is not safe for concurrent use
-type BiHashmap[K, V comparable] = hashmap.BiHashmap[K, V]
+type BiHashMap[K, V comparable] = hashmap.BiHashMap[K, V]
 
 // store values in a dense slice while providing O(1) lookup by key.
 //
@@ -156,7 +170,7 @@ type DenseMap[K comparable, V any] = hashmap.DenseMap[K, V]
 // create an empty bimap
 //
 // time: O(1)
-func NewBiHashmap[K, V comparable]() *BiHashmap[K, V] { return hashmap.NewBiHashmap[K, V]() }
+func NewBiHashMap[K, V comparable]() *BiHashMap[K, V] { return hashmap.NewBiHashMap[K, V]() }
 
 // create an empty densemap.
 //
@@ -172,45 +186,6 @@ func NewTypeMap() *TypeMap { return hashmap.NewTypeMap() }
 //
 // allow at most one value per base type
 type TypeMap = hashmap.TypeMap
-
-// get retrieves the stored pointer for the base type T
-//
-// require T to be a non pointer type
-//
-// return false if the entry does not exist or the cast fails
-func TypeMapGet[T any](tm *TypeMap) (*T, bool) { return hashmap.TypeMapGet[T](tm) }
-
-// retrieves the stored pointer for the base type of t
-func TypeMapGetByType(tm *TypeMap, t reflect.Type) (any, bool) {
-	return hashmap.TypeMapGetByType(tm, t)
-}
-
-// checks the existance of T in the TypeMap
-//
-// require T to be a non pointer type
-func TypeMapHas[T any](tm *TypeMap) bool { return hashmap.TypeMapHas[T](tm) }
-
-// remove deletes the entry for the base type T
-//
-// require T to be a non pointer type
-func TypeMapRemove[T any](tm *TypeMap) bool { return hashmap.TypeMapRemove[T](tm) }
-
-// removes the entry keyed by the base type of t
-func TypeMapRemoveByType(tm *TypeMap, t reflect.Type) bool { return hashmap.TypeMapRemoveByType(tm, t) }
-
-// add stores v under the base type of T
-//
-// require T to be a non pointer type
-//
-// store the value as *T
-func TypeMapSet[T any](tm *TypeMap, v T) bool { return hashmap.TypeMapSet(tm, v) }
-
-// stores v under the base type of t
-//
-// accept v as either base value or pointer to base value
-func TypeMapSetByType(tm *TypeMap, v any, t reflect.Type) bool {
-	return hashmap.TypeMapSetByType(tm, v, t)
-}
 
 // ===
 // log
@@ -252,7 +227,8 @@ const LogWarning = log.LogWarning
 
 // create a logger that keeps at most maxRecords records
 //
-// if maxRecords is less than or equal to zero, records are not retained
+// a maxRecords less than or equal to zero is raised to 1, since a logger that
+// retains nothing would report every record as dropped
 //
 // time: O(n) due to allocation
 func NewLogger(maxRecords int) *Logger { return log.NewLogger(maxRecords) }
@@ -342,22 +318,10 @@ func Variance[T Float](values []T) T { return math.Variance(values) }
 // queue
 // =====
 
-// store up to a fixed number of elements in fifo order
-//
-// this type is not safe for concurrent use
-type BoundedQueue[T any] = queue.BoundedQueue[T]
-
 // store elements in a double ended fifo structure using a ring buffer
 //
 // this type is not safe for concurrent use
 type Deque[T any] = queue.Deque[T]
-
-// create a new fifo queue with a fixed capacity
-//
-// if capacity is less than or equal to zero, create an empty queue that rejects enqueues
-//
-// time: O(n) due to allocation
-func NewBoundedQueue[T any](capacity int) *BoundedQueue[T] { return queue.NewBoundedQueue[T](capacity) }
 
 // create an empty deque
 //

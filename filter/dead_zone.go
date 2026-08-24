@@ -1,6 +1,6 @@
 package filter
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // suppress values around zero with a dead zone
 type DeadZone[T c.Float] struct {

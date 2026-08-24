@@ -1,6 +1,6 @@
 package filter
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // compute a sliding window mean
 //
@@ -33,7 +33,7 @@ func (m *Mean[T]) Reset() {
 
 // compute the mean of the current window after inserting value
 //
-// time: O(1)
+// time: O(w) once the window is full, since the window is shifted on insert
 func (m *Mean[T]) Compute(value T) T {
 	if m.window <= 0 {
 		return 0

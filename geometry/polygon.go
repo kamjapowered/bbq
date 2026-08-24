@@ -1,6 +1,10 @@
 package geometry
 
-import c "github.com/kamjapowered/bbq/constraints"
+import (
+	"iter"
+
+	c "kamjapowered.com/bbq/constraints"
+)
 
 // store a polygon as points in local space
 //
@@ -19,11 +23,27 @@ func NewPolygon[T c.Number]() Polygon[T] {
 }
 
 // add a point
-func (p *Polygon[T]) Add(v Vector[T]) {
+func (p *Polygon[T]) Append(v Vector[T]) {
 	p.Points = append(p.Points, v)
 }
 
 // clear all points
 func (p *Polygon[T]) Clear() {
 	p.Points = p.Points[:0]
+}
+
+// append a point built from x and y
+func (p *Polygon[T]) AppendXY(x, y T) {
+	p.Points = append(p.Points, Vector[T]{X: x, Y: y})
+}
+
+// iterate the points in insertion order
+func (p *Polygon[T]) Iter() iter.Seq[Vector[T]] {
+	return func(yield func(Vector[T]) bool) {
+		for _, v := range p.Points {
+			if !yield(v) {
+				return
+			}
+		}
+	}
 }

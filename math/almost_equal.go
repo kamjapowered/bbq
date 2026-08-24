@@ -1,6 +1,6 @@
 package math
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // report whether a and b are within eps
 //
@@ -8,6 +8,10 @@ import c "github.com/kamjapowered/bbq/constraints"
 //
 //microwave:export
 func AlmostEqual[T c.Float](a, b, eps T) bool {
+	if a == b {
+		return true
+	}
+
 	if eps < 0 {
 		eps = -eps
 	}

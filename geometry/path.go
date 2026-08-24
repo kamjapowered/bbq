@@ -3,7 +3,7 @@ package geometry
 import (
 	"iter"
 
-	c "github.com/kamjapowered/bbq/constraints"
+	c "kamjapowered.com/bbq/constraints"
 )
 
 // store a path as ordered points in local space
@@ -24,12 +24,12 @@ func NewPath[T c.Number]() Path[T] {
 }
 
 // add a point
-func (p *Path[T]) Add(v Vector[T]) {
+func (p *Path[T]) Append(v Vector[T]) {
 	p.Points = append(p.Points, v)
 }
 
 // add a point from x and y with z set to zero
-func (p *Path[T]) AddXY(x, y T) {
+func (p *Path[T]) AppendXY(x, y T) {
 	p.Points = append(p.Points, Vector[T]{X: x, Y: y})
 }
 

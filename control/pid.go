@@ -1,6 +1,6 @@
 package control
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // compute a pid control output from the current error signal
 //
@@ -12,6 +12,7 @@ type Pid[T c.Float] struct {
 	prevErr    T
 	integral   T
 	derivative T
+	y          T
 
 	// integral clamp range for anti windup
 	iMin T
@@ -34,6 +35,7 @@ func (p *Pid[T]) Reset() {
 	p.prevErr = 0
 	p.integral = 0
 	p.derivative = 0
+	p.y = 0
 }
 
 // set integral clamp limits for anti windup
@@ -46,12 +48,14 @@ func (p *Pid[T]) AntiWindup(min, max T) {
 
 // compute output given an error value and dt
 //
-// return 0 if dt is not positive
+// hold and return the last output if dt is not positive
 //
 // time: O(1)
 func (p *Pid[T]) Compute(err, dt T) T {
+	// a non positive step advances nothing, so hold the last output rather than
+	// injecting a zero into the signal
 	if dt <= 0 {
-		return 0
+		return p.y
 	}
 
 	p.integral += err * dt
@@ -63,9 +67,9 @@ func (p *Pid[T]) Compute(err, dt T) T {
 	rawD := (err - p.prevErr) / dt
 	p.derivative = p.alpha*rawD + (1-p.alpha)*p.derivative
 
-	out := p.kp*err + p.ki*p.integral + p.kd*p.derivative
+	p.y = p.kp*err + p.ki*p.integral + p.kd*p.derivative
 
 	p.prevErr = err
 
-	return out
+	return p.y
 }

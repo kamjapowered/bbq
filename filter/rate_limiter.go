@@ -1,6 +1,6 @@
 package filter
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // limit the rate of change of a signal
 //
@@ -33,8 +33,10 @@ func (r *RateLimiter[T]) Reset() {
 //
 // time: O(1)
 func (r *RateLimiter[T]) Compute(x, dt T) T {
+	// a non positive step advances nothing, so hold the last output rather than
+	// injecting a zero into the signal
 	if dt <= 0 {
-		return 0
+		return r.y
 	}
 
 	if !r.init {

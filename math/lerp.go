@@ -1,6 +1,6 @@
 package math
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // linearly interpolate from a to b using t
 //

@@ -1,6 +1,6 @@
 package curves
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // hermite smoothstep, c1 continuous
 //

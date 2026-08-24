@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 )
 
 func Read(path string) (map[string][]any, error) {
@@ -43,6 +44,26 @@ func Read(path string) (map[string][]any, error) {
 }
 
 func Save(data map[string][]any, path string) error {
+	var headers []string
+	for header := range data {
+		headers = append(headers, header)
+	}
+	slices.Sort(headers)
+
+	// validate before creating the file, so a rejected call leaves nothing behind
+	rows := 0
+	for i, header := range headers {
+		n := len(data[header])
+		if i == 0 {
+			rows = n
+			continue
+		}
+
+		if n != rows {
+			return fmt.Errorf("csv: column %q has %d values, want %d; every column must be the same length", header, n, rows)
+		}
+	}
+
 	file, err := os.Create(path)
 	if err != nil {
 		return err
@@ -50,18 +71,12 @@ func Save(data map[string][]any, path string) error {
 	defer file.Close()
 
 	writer := csv.NewWriter(file)
-	defer writer.Flush()
-
-	var headers []string
-	for header := range data {
-		headers = append(headers, header)
-	}
 
 	if err := writer.Write(headers); err != nil {
 		return err
 	}
 
-	for i := range len(data[headers[0]]) {
+	for i := range rows {
 		var row []string
 		for _, header := range headers {
 			row = append(row, toString(data[header][i]))
@@ -71,7 +86,9 @@ func Save(data map[string][]any, path string) error {
 		}
 	}
 
-	return nil
+	writer.Flush()
+
+	return writer.Error()
 }
 
 func toString(value any) string {

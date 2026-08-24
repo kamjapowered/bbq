@@ -121,7 +121,7 @@ func (s *UniqueStack[T]) Pop() (T, bool) {
 // report whether v is stored
 //
 // time: O(1)
-func (s *UniqueStack[T]) Contains(v T) bool {
+func (s *UniqueStack[T]) Has(v T) bool {
 	_, ok := s.index[v]
 	return ok
 }

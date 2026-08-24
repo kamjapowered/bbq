@@ -10,7 +10,7 @@ import "iter"
 // this type is not safe for concurrent use
 //
 //microwave:export
-type BiHashmap[K, V comparable] struct {
+type BiHashMap[K, V comparable] struct {
 	fwd map[K]V
 	rev map[V]K
 }
@@ -20,8 +20,8 @@ type BiHashmap[K, V comparable] struct {
 // time: O(1)
 //
 //microwave:export
-func NewBiHashmap[K, V comparable]() *BiHashmap[K, V] {
-	return &BiHashmap[K, V]{
+func NewBiHashMap[K, V comparable]() *BiHashMap[K, V] {
+	return &BiHashMap[K, V]{
 		fwd: make(map[K]V),
 		rev: make(map[V]K),
 	}
@@ -32,7 +32,7 @@ func NewBiHashmap[K, V comparable]() *BiHashmap[K, V] {
 // return true if it inserted a new pair, false if it replaced something
 //
 // time: O(1) amortised
-func (b *BiHashmap[K, V]) Set(k K, v V) bool {
+func (b *BiHashMap[K, V]) Set(k K, v V) bool {
 	replaced := false
 
 	if oldV, ok := b.fwd[k]; ok {
@@ -43,6 +43,11 @@ func (b *BiHashmap[K, V]) Set(k K, v V) bool {
 	if oldK, ok := b.rev[v]; ok {
 		replaced = true
 		delete(b.fwd, oldK)
+	}
+
+	if b.fwd == nil {
+		b.fwd = make(map[K]V)
+		b.rev = make(map[V]K)
 	}
 
 	b.fwd[k] = v
@@ -56,7 +61,7 @@ func (b *BiHashmap[K, V]) Set(k K, v V) bool {
 // return false if k is not present
 //
 // time: O(1)
-func (b *BiHashmap[K, V]) GetByKey(k K) (V, bool) {
+func (b *BiHashMap[K, V]) GetByKey(k K) (V, bool) {
 	v, ok := b.fwd[k]
 	return v, ok
 }
@@ -66,7 +71,7 @@ func (b *BiHashmap[K, V]) GetByKey(k K) (V, bool) {
 // return false if v is not present
 //
 // time: O(1)
-func (b *BiHashmap[K, V]) GetByValue(v V) (K, bool) {
+func (b *BiHashMap[K, V]) GetByValue(v V) (K, bool) {
 	k, ok := b.rev[v]
 	return k, ok
 }
@@ -76,7 +81,7 @@ func (b *BiHashmap[K, V]) GetByValue(v V) (K, bool) {
 // return false if k is not present
 //
 // time: O(1)
-func (b *BiHashmap[K, V]) DeleteByKey(k K) bool {
+func (b *BiHashMap[K, V]) RemoveByKey(k K) bool {
 	v, ok := b.fwd[k]
 	if !ok {
 		return false
@@ -92,7 +97,7 @@ func (b *BiHashmap[K, V]) DeleteByKey(k K) bool {
 // return false if v is not present
 //
 // time: O(1)
-func (b *BiHashmap[K, V]) DeleteByValue(v V) bool {
+func (b *BiHashMap[K, V]) RemoveByValue(v V) bool {
 	k, ok := b.rev[v]
 	if !ok {
 		return false
@@ -106,7 +111,7 @@ func (b *BiHashmap[K, V]) DeleteByValue(v V) bool {
 // report whether k is present
 //
 // time: O(1)
-func (b *BiHashmap[K, V]) HasKey(k K) bool {
+func (b *BiHashMap[K, V]) HasKey(k K) bool {
 	_, ok := b.fwd[k]
 	return ok
 }
@@ -114,7 +119,7 @@ func (b *BiHashmap[K, V]) HasKey(k K) bool {
 // report whether v is present
 //
 // time: O(1)
-func (b *BiHashmap[K, V]) HasValue(v V) bool {
+func (b *BiHashMap[K, V]) HasValue(v V) bool {
 	_, ok := b.rev[v]
 	return ok
 }
@@ -122,21 +127,21 @@ func (b *BiHashmap[K, V]) HasValue(v V) bool {
 // report whether no pairs are stored
 //
 // time: O(1)
-func (b *BiHashmap[K, V]) Empty() bool {
+func (b *BiHashMap[K, V]) Empty() bool {
 	return len(b.fwd) == 0
 }
 
 // return the number of stored pairs
 //
 // time: O(1)
-func (b *BiHashmap[K, V]) Len() int {
+func (b *BiHashMap[K, V]) Len() int {
 	return len(b.fwd)
 }
 
 // remove all pairs while preserving capacity
 //
 // time: O(n)
-func (b *BiHashmap[K, V]) Clear() {
+func (b *BiHashMap[K, V]) Clear() {
 	for k, v := range b.fwd {
 		delete(b.fwd, k)
 		delete(b.rev, v)
@@ -146,7 +151,7 @@ func (b *BiHashmap[K, V]) Clear() {
 // return a copy of keys in unspecified order
 //
 // time: O(n)
-func (b *BiHashmap[K, V]) Keys() []K {
+func (b *BiHashMap[K, V]) Keys() []K {
 	out := make([]K, 0, len(b.fwd))
 	for k := range b.fwd {
 		out = append(out, k)
@@ -157,7 +162,7 @@ func (b *BiHashmap[K, V]) Keys() []K {
 // return a copy of values in unspecified order
 //
 // time: O(n)
-func (b *BiHashmap[K, V]) Values() []V {
+func (b *BiHashMap[K, V]) Values() []V {
 	out := make([]V, 0, len(b.rev))
 	for v := range b.rev {
 		out = append(out, v)
@@ -170,7 +175,7 @@ func (b *BiHashmap[K, V]) Values() []V {
 // iteration stops if yield returns false
 //
 // time: O(n)
-func (b *BiHashmap[K, V]) Iter() iter.Seq2[K, V] {
+func (b *BiHashMap[K, V]) Iter() iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
 		for k, v := range b.fwd {
 			if !yield(k, v) {
@@ -185,7 +190,7 @@ func (b *BiHashmap[K, V]) Iter() iter.Seq2[K, V] {
 // iteration stops if yield returns false
 //
 // time: O(n)
-func (b *BiHashmap[K, V]) Drain() iter.Seq2[K, V] {
+func (b *BiHashMap[K, V]) Drain() iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
 		for k, v := range b.fwd {
 			delete(b.fwd, k)

@@ -3,7 +3,7 @@ package geometry
 import (
 	"math"
 
-	c "github.com/kamjapowered/bbq/constraints"
+	c "kamjapowered.com/bbq/constraints"
 )
 
 // store a 3d vector where z can be left as zero for 2d usage

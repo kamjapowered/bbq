@@ -1,6 +1,6 @@
 package control
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // generate a step reference signal
 type Step[T c.Number] struct {

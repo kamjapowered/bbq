@@ -37,7 +37,7 @@ func (h *HashSet[T]) Remove(v T) {
 // report whether an element is stored
 //
 // time: O(1)
-func (h *HashSet[T]) Contains(v T) bool {
+func (h *HashSet[T]) Has(v T) bool {
 	_, ok := h.data[v]
 	return ok
 }
@@ -78,7 +78,8 @@ func (h *HashSet[T]) ToSlice() []T {
 
 // iterate over stored elements
 //
-// iteration stops if yield returns false
+// an element is removed only after yield accepts it, so stopping early
+// leaves the last yielded element in the set
 //
 // order is unspecified
 //
@@ -101,10 +102,10 @@ func (h *HashSet[T]) Iter() iter.Seq[T] {
 func (h *HashSet[T]) Drain() iter.Seq[T] {
 	return func(yield func(T) bool) {
 		for k := range h.data {
-			delete(h.data, k)
 			if !yield(k) {
 				return
 			}
+			delete(h.data, k)
 		}
 	}
 }

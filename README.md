@@ -13,7 +13,7 @@
 <br>
 
 [![go version][go_version_img]][go_dev_url]
-[![version](https://img.shields.io/github/v/tag/vistormu/go-dsa?style=for-the-badge)](https://github.com/vistormu/go-dsa/tags)
+[![version][repo_version_img]][repo_version_url]
 [![license][repo_license_img]][repo_license_url]
 
 <br>
@@ -23,6 +23,13 @@
 ---
 
 `bbq` is a small collection of useful data structures and algorithms reused across projects
+
+```sh
+go get kamjapowered.com/bbq
+```
+
+the import path is `kamjapowered.com/bbq`, not the github url. the repository is
+the source; the module path is the domain.
 
 | package       | description                                                                                 |
 | ------------- | ------------------------------------------------------------------------------------------- |
@@ -45,7 +52,17 @@
 | `system`      | small wrappers for process and operating-system interactions                                |
 | `terminal`    | ansi escape constants and terminal capability helpers                                       |
 
-[go_version_img]: https://img.shields.io/badge/go-1.25+-00add8?style=for-the-badge&logo=go
+## licence
+
+the code is [mit](./LICENSE).
+
+**the content is carved out.** the name, the logo and the wordmark are all
+rights reserved. the mit grant covers the code in this repository and not the
+marks it is published under.
+
+[go_version_img]: https://img.shields.io/badge/go-1.27+-00add8?style=for-the-badge&logo=go
 [go_dev_url]: https://go.dev/
 [repo_license_img]: https://img.shields.io/github/license/kamjapowered/bbq?style=for-the-badge
-[repo_license_url]: https://github.com/kamjapowered/bbq/blob/main/license
+[repo_license_url]: https://github.com/kamjapowered/bbq/blob/main/LICENSE
+[repo_version_img]: https://img.shields.io/github/v/tag/kamjapowered/bbq?style=for-the-badge
+[repo_version_url]: https://github.com/kamjapowered/bbq/tags

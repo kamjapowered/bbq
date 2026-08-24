@@ -1,6 +1,6 @@
 package math
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // return the sign of v as -1, 0, or 1
 //

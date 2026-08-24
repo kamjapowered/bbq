@@ -219,3 +219,19 @@ func (d *Deque[T]) grow() {
 	d.data = buf
 	d.head = 0
 }
+
+// copy the elements into a fresh slice, front to back
+//
+// time: O(n)
+func (d *Deque[T]) ToSlice() []T {
+	out := make([]T, d.size)
+	for i := range d.size {
+		idx := d.head + i
+		if idx >= len(d.data) {
+			idx -= len(d.data)
+		}
+		out[i] = d.data[idx]
+	}
+
+	return out
+}

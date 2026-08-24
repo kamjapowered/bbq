@@ -1,6 +1,6 @@
 package math
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // clamp value to the inclusive range [lo, hi]
 //

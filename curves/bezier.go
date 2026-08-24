@@ -1,8 +1,8 @@
 package curves
 
 import (
-	c "github.com/kamjapowered/bbq/constraints"
-	"github.com/kamjapowered/bbq/geometry"
+	c "kamjapowered.com/bbq/constraints"
+	"kamjapowered.com/bbq/geometry"
 )
 
 // bezier curve of arbitrary degree evaluated with de casteljau

@@ -1,6 +1,6 @@
 package control
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // simulate a second order siso lti system in state space form
 //
@@ -20,6 +20,8 @@ type SecondOrder[T c.Float] struct {
 
 	c1, c2 T
 	d      T
+
+	y T
 
 	x1, x2 T
 }
@@ -70,16 +72,19 @@ func NewSecondOrder[T c.Float](k, wn, zeta T) *SecondOrder[T] {
 func (s *SecondOrder[T]) Reset() {
 	s.x1 = 0
 	s.x2 = 0
+	s.y = 0
 }
 
 // compute output for input u and timestep dt
 //
-// return 0 if dt is not positive
+// hold and return the last output if dt is not positive
 //
 // time: O(1)
 func (s *SecondOrder[T]) Compute(u, dt T) T {
+	// a non positive step advances nothing, so hold the last output rather than
+	// injecting a zero into the signal
 	if dt <= 0 {
-		return 0
+		return s.y
 	}
 
 	// x' = a*x + b*u
@@ -90,5 +95,7 @@ func (s *SecondOrder[T]) Compute(u, dt T) T {
 	s.x1 += dt * dx1
 	s.x2 += dt * dx2
 
-	return s.c1*s.x1 + s.c2*s.x2 + s.d*u
+	s.y = s.c1*s.x1 + s.c2*s.x2 + s.d*u
+
+	return s.y
 }

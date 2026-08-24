@@ -13,7 +13,7 @@ type list[T any] interface {
 	Insert(index int, data T) error
 	Remove(index int) (T, error)
 	Get(index int) (T, error)
-	Length() int
+	Len() int
 }
 
 func testAppend(t *testing.T, list list[int], expected []int) {
@@ -48,8 +48,8 @@ func testPop(t *testing.T, list list[int], expected []int) {
 			t.Errorf("Pop: Expected %d, got %d", v, got)
 		}
 	}
-	if list.Length() != 0 {
-		t.Errorf("Pop: Expected empty list, got length %d", list.Length())
+	if list.Len() != 0 {
+		t.Errorf("Pop: Expected empty list, got length %d", list.Len())
 	}
 	if _, err := list.Pop(); err == nil {
 		t.Errorf("Pop: Expected error on empty list, got nil")
@@ -66,8 +66,8 @@ func testPopLast(t *testing.T, list list[int], expected []int) {
 			t.Errorf("PopLast: Expected %d, got %d", v, got)
 		}
 	}
-	if list.Length() != 0 {
-		t.Errorf("PopLast: Expected empty list, got length %d", list.Length())
+	if list.Len() != 0 {
+		t.Errorf("PopLast: Expected empty list, got length %d", list.Len())
 	}
 	if _, err := list.PopLast(); err == nil {
 		t.Errorf("PopLast: Expected error on empty list, got nil")
@@ -159,4 +159,3 @@ func TestMain(t *testing.T) {
 		})
 	}
 }
-

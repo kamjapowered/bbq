@@ -1,6 +1,6 @@
 package control
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // produce a ramp reference after an optional delay
 type Ramp[T c.Number] struct {

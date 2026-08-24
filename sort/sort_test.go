@@ -1,7 +1,7 @@
 package sort
 
 import (
-	"github.com/kamjapowered/bbq/constraints"
+	"kamjapowered.com/bbq/constraints"
 	"testing"
 )
 

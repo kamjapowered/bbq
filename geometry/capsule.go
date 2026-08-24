@@ -1,6 +1,6 @@
 package geometry
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // store a capsule as a segment plus radius
 //

@@ -1,6 +1,6 @@
 package filter
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // smooth a signal with a first order low pass filter
 //
@@ -19,7 +19,7 @@ type LowPass[T c.Float] struct {
 //
 // alpha = 0 holds the previous output
 func NewLowPass[T c.Float](alpha T) *LowPass[T] {
-	return &LowPass[T]{alpha: alpha}
+	return &LowPass[T]{alpha: max(0, min(1, alpha))}
 }
 
 // create a low pass filter from a time constant tau and timestep dt

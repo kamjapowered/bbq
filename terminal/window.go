@@ -1,3 +1,5 @@
+// Package terminal is unix only. it uses SIGWINCH, which does not exist on
+// windows, so the package does not compile for GOOS=windows.
 package terminal
 
 import (
@@ -5,7 +7,6 @@ import (
 	"errors"
 	"os"
 	"os/signal"
-	"runtime"
 	"syscall"
 
 	"golang.org/x/term"
@@ -24,7 +25,7 @@ func IsTerminal(fd int) bool {
 // the first return value is the number of columns.
 // the second return value is the number of rows.
 // an error is returned if the descriptor is not a terminal or the size cannot be queried.
-func GetSize(fd int) (int, int, error) {
+func Size(fd int) (int, int, error) {
 	if fd < 0 {
 		return 0, 0, errors.New("terminal: fd must be non negative")
 	}
@@ -38,18 +39,18 @@ func GetSize(fd int) (int, int, error) {
 }
 
 // return the current terminal size for standard input.
-func GetSizeStdin() (int, int, error) {
-	return GetSize(int(os.Stdin.Fd()))
+func SizeStdin() (int, int, error) {
+	return Size(int(os.Stdin.Fd()))
 }
 
 // return the current terminal size for standard output.
-func GetSizeStdout() (int, int, error) {
-	return GetSize(int(os.Stdout.Fd()))
+func SizeStdout() (int, int, error) {
+	return Size(int(os.Stdout.Fd()))
 }
 
 // return the current terminal size for standard error.
-func GetSizeStderr() (int, int, error) {
-	return GetSize(int(os.Stderr.Fd()))
+func SizeStderr() (int, int, error) {
+	return Size(int(os.Stderr.Fd()))
 }
 
 // emit the terminal size each time the window is resized.
@@ -60,17 +61,13 @@ func GetSizeStderr() (int, int, error) {
 // the returned channel is closed when ctx is done.
 // the first value sent is the current size if it can be determined.
 func WatchResize(ctx context.Context) (<-chan [2]int, error) {
-	if runtime.GOOS == "windows" {
-		return nil, errors.New("terminal: resize notifications are not supported on windows")
-	}
-
 	out := make(chan [2]int, 1)
 
 	go func() {
 		defer close(out)
 
 		// send initial size if available
-		if cols, rows, err := GetSizeStdout(); err == nil && cols > 0 && rows > 0 {
+		if cols, rows, err := SizeStdout(); err == nil && cols > 0 && rows > 0 {
 			select {
 			case out <- [2]int{cols, rows}:
 			case <-ctx.Done():
@@ -87,7 +84,7 @@ func WatchResize(ctx context.Context) (<-chan [2]int, error) {
 			case <-ctx.Done():
 				return
 			case <-ch:
-				cols, rows, err := GetSizeStdout()
+				cols, rows, err := SizeStdout()
 				if err != nil || cols <= 0 || rows <= 0 {
 					continue
 				}

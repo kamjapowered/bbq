@@ -3,8 +3,8 @@ package log
 import (
 	"iter"
 
-	f "github.com/kamjapowered/bbq/functional"
-	"github.com/kamjapowered/bbq/queue"
+	f "kamjapowered.com/bbq/functional"
+	"kamjapowered.com/bbq/queue"
 )
 
 // store log records and forward them to sinks
@@ -22,12 +22,17 @@ type Logger struct {
 
 // create a logger that keeps at most maxRecords records
 //
-// if maxRecords is less than or equal to zero, records are not retained
+// a maxRecords less than or equal to zero is raised to 1, since a logger that
+// retains nothing would report every record as dropped
 //
 // time: O(n) due to allocation
 //
 //microwave:export
 func NewLogger(maxRecords int) *Logger {
+	if maxRecords <= 0 {
+		maxRecords = 1
+	}
+
 	return &Logger{
 		records: queue.NewRingQueue[Record](maxRecords),
 		sinks:   make([]Sink, 0),
@@ -79,11 +84,11 @@ func (l *Logger) Log(level LogLevel, msg string, opts ...f.Option[Record]) {
 //
 // time: O(1) amortised
 func (l *Logger) Push(r Record) {
-	if l.records.Full() {
-		_, _ = l.records.Dequeue()
+	if l.records.Full() && l.records.Capacity() > 0 {
+		_, _ = l.records.Pop()
 		l.dropped++
 	}
-	l.records.Enqueue(r)
+	l.records.Push(r)
 }
 
 // return the number of records currently buffered

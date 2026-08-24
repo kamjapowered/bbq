@@ -144,7 +144,6 @@ func (l *DoublyLinkedList[T]) Get(index int) (T, error) {
 	return current.data, nil
 }
 
-func (l *DoublyLinkedList[T]) Length() int {
+func (l *DoublyLinkedList[T]) Len() int {
 	return l.length
 }
-

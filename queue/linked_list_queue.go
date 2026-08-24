@@ -5,7 +5,7 @@ import "iter"
 // store elements in fifo order using a singly linked list
 //
 // this type is not safe for concurrent use
-type QueueLinkedList[T any] struct {
+type LinkedQueue[T any] struct {
 	head   *node[T]
 	tail   *node[T]
 	length int
@@ -19,14 +19,14 @@ type node[T any] struct {
 // create an empty queue
 //
 // time: O(1)
-func NewQueueLinkedList[T any]() *QueueLinkedList[T] {
-	return &QueueLinkedList[T]{}
+func NewLinkedQueue[T any]() *LinkedQueue[T] {
+	return &LinkedQueue[T]{}
 }
 
 // add an element to the end of the queue
 //
 // time: O(1)
-func (q *QueueLinkedList[T]) Enqueue(v T) {
+func (q *LinkedQueue[T]) Push(v T) {
 	n := &node[T]{data: v}
 
 	if q.tail != nil {
@@ -44,7 +44,7 @@ func (q *QueueLinkedList[T]) Enqueue(v T) {
 // return false if the queue is empty
 //
 // time: O(1)
-func (q *QueueLinkedList[T]) Dequeue() (T, bool) {
+func (q *LinkedQueue[T]) Pop() (T, bool) {
 	if q.length == 0 {
 		var zero T
 		return zero, false
@@ -67,7 +67,7 @@ func (q *QueueLinkedList[T]) Dequeue() (T, bool) {
 // return false if the queue is empty
 //
 // time: O(1)
-func (q *QueueLinkedList[T]) Peek() (T, bool) {
+func (q *LinkedQueue[T]) Peek() (T, bool) {
 	if q.length == 0 {
 		var zero T
 		return zero, false
@@ -79,21 +79,21 @@ func (q *QueueLinkedList[T]) Peek() (T, bool) {
 // report whether no elements are stored
 //
 // time: O(1)
-func (q *QueueLinkedList[T]) Empty() bool {
+func (q *LinkedQueue[T]) Empty() bool {
 	return q.length == 0
 }
 
 // return the number of stored elements
 //
 // time: O(1)
-func (q *QueueLinkedList[T]) Len() int {
+func (q *LinkedQueue[T]) Len() int {
 	return q.length
 }
 
 // remove all elements
 //
 // time: O(1)
-func (q *QueueLinkedList[T]) Clear() {
+func (q *LinkedQueue[T]) Clear() {
 	q.head = nil
 	q.tail = nil
 	q.length = 0
@@ -102,7 +102,7 @@ func (q *QueueLinkedList[T]) Clear() {
 // return a copy of the stored elements in fifo order
 //
 // time: O(n)
-func (q *QueueLinkedList[T]) ToSlice() []T {
+func (q *LinkedQueue[T]) ToSlice() []T {
 	out := make([]T, q.length)
 
 	curr := q.head
@@ -119,7 +119,7 @@ func (q *QueueLinkedList[T]) ToSlice() []T {
 // iteration stops if yield returns false
 //
 // time: O(n)
-func (q *QueueLinkedList[T]) Iter() iter.Seq[T] {
+func (q *LinkedQueue[T]) Iter() iter.Seq[T] {
 	return func(yield func(T) bool) {
 		for curr := q.head; curr != nil; curr = curr.next {
 			if !yield(curr.data) {
@@ -134,7 +134,7 @@ func (q *QueueLinkedList[T]) Iter() iter.Seq[T] {
 // iteration stops if yield returns false
 //
 // time: O(n)
-func (q *QueueLinkedList[T]) Drain() iter.Seq[T] {
+func (q *LinkedQueue[T]) Drain() iter.Seq[T] {
 	return func(yield func(T) bool) {
 		for q.head != nil {
 			n := q.head

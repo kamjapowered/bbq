@@ -1,6 +1,6 @@
 package control
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // simulate a first order siso lti system in state space form
 //
@@ -15,6 +15,7 @@ import c "github.com/kamjapowered/bbq/constraints"
 type FirstOrder[T c.Float] struct {
 	a, b, c, d T
 	x          T
+	y          T
 }
 
 // create a first order system from state space coefficients
@@ -50,20 +51,24 @@ func NewFirstOrder[T c.Float](k, tau T) *FirstOrder[T] {
 // time: O(1)
 func (s *FirstOrder[T]) Reset() {
 	s.x = 0
+	s.y = 0
 }
 
 // compute output for input u and timestep dt
 //
-// return 0 if dt is not positive
+// hold and return the last output if dt is not positive
 //
 // time: O(1)
 func (s *FirstOrder[T]) Compute(u, dt T) T {
+	// a non positive step advances nothing, so hold the last output rather than
+	// injecting a zero into the signal
 	if dt <= 0 {
-		return 0
+		return s.y
 	}
 
 	// forward euler: x_{k+1} = x_k + dt*(a*x_k + b*u_k)
 	s.x += dt * (s.a*s.x + s.b*u)
+	s.y = s.c*s.x + s.d*u
 
-	return s.c*s.x + s.d*u
+	return s.y
 }

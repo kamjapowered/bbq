@@ -2,7 +2,7 @@ package log
 
 import (
 	"fmt"
-	f "github.com/kamjapowered/bbq/functional"
+	f "kamjapowered.com/bbq/functional"
 )
 
 // ======
@@ -84,7 +84,7 @@ func (logOpt) Wrap(err error) f.Option[Record] {
 		if err != nil {
 			r.Fields = append(r.Fields, Field{
 				key:   "error",
-				value: err.Error(),
+				value: err,
 			})
 		}
 	}

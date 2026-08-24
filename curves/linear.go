@@ -1,8 +1,8 @@
 package curves
 
 import (
-	c "github.com/kamjapowered/bbq/constraints"
-	"github.com/kamjapowered/bbq/geometry"
+	c "kamjapowered.com/bbq/constraints"
+	"kamjapowered.com/bbq/geometry"
 )
 
 // linear interpolation between two points in space

@@ -5,7 +5,7 @@ import "iter"
 // store elements in fifo order using a circular singly linked list
 //
 // this type is not safe for concurrent use
-type QueueLinkedListArray[T any] struct {
+type LinkedRingQueue[T any] struct {
 	head   *node[T]
 	tail   *node[T]
 	length int
@@ -14,14 +14,14 @@ type QueueLinkedListArray[T any] struct {
 // create an empty queue
 //
 // time: O(1)
-func NewQueueLinkedListArray[T any]() *QueueLinkedListArray[T] {
-	return &QueueLinkedListArray[T]{}
+func NewLinkedRingQueue[T any]() *LinkedRingQueue[T] {
+	return &LinkedRingQueue[T]{}
 }
 
 // add an element to the end of the queue
 //
 // time: O(1)
-func (q *QueueLinkedListArray[T]) Enqueue(v T) {
+func (q *LinkedRingQueue[T]) Push(v T) {
 	n := &node[T]{data: v}
 
 	if q.head == nil {
@@ -43,7 +43,7 @@ func (q *QueueLinkedListArray[T]) Enqueue(v T) {
 // return false if the queue is empty
 //
 // time: O(1)
-func (q *QueueLinkedListArray[T]) Dequeue() (T, bool) {
+func (q *LinkedRingQueue[T]) Pop() (T, bool) {
 	if q.length == 0 {
 		var zero T
 		return zero, false
@@ -70,7 +70,7 @@ func (q *QueueLinkedListArray[T]) Dequeue() (T, bool) {
 // return false if the queue is empty
 //
 // time: O(1)
-func (q *QueueLinkedListArray[T]) Peek() (T, bool) {
+func (q *LinkedRingQueue[T]) Peek() (T, bool) {
 	if q.length == 0 {
 		var zero T
 		return zero, false
@@ -82,21 +82,21 @@ func (q *QueueLinkedListArray[T]) Peek() (T, bool) {
 // report whether no elements are stored
 //
 // time: O(1)
-func (q *QueueLinkedListArray[T]) Empty() bool {
+func (q *LinkedRingQueue[T]) Empty() bool {
 	return q.length == 0
 }
 
 // return the number of stored elements
 //
 // time: O(1)
-func (q *QueueLinkedListArray[T]) Len() int {
+func (q *LinkedRingQueue[T]) Len() int {
 	return q.length
 }
 
 // remove all elements
 //
 // time: O(1)
-func (q *QueueLinkedListArray[T]) Clear() {
+func (q *LinkedRingQueue[T]) Clear() {
 	q.head = nil
 	q.tail = nil
 	q.length = 0
@@ -105,7 +105,7 @@ func (q *QueueLinkedListArray[T]) Clear() {
 // return a copy of the stored elements in fifo order
 //
 // time: O(n)
-func (q *QueueLinkedListArray[T]) ToSlice() []T {
+func (q *LinkedRingQueue[T]) ToSlice() []T {
 	out := make([]T, q.length)
 	if q.length == 0 {
 		return out
@@ -125,7 +125,7 @@ func (q *QueueLinkedListArray[T]) ToSlice() []T {
 // iteration stops if yield returns false
 //
 // time: O(n)
-func (q *QueueLinkedListArray[T]) Iter() iter.Seq[T] {
+func (q *LinkedRingQueue[T]) Iter() iter.Seq[T] {
 	return func(yield func(T) bool) {
 		for curr, i := q.head, 0; i < q.length; i++ {
 			if !yield(curr.data) {
@@ -141,7 +141,7 @@ func (q *QueueLinkedListArray[T]) Iter() iter.Seq[T] {
 // iteration stops if yield returns false
 //
 // time: O(n)
-func (q *QueueLinkedListArray[T]) Drain() iter.Seq[T] {
+func (q *LinkedRingQueue[T]) Drain() iter.Seq[T] {
 	return func(yield func(T) bool) {
 		for q.length > 0 {
 			v := q.head.data

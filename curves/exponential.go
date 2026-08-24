@@ -3,7 +3,7 @@ package curves
 import (
 	"math"
 
-	c "github.com/kamjapowered/bbq/constraints"
+	c "kamjapowered.com/bbq/constraints"
 )
 
 // exponential ease in

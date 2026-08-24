@@ -27,7 +27,7 @@ func NewQueue[T any]() *Queue[T] {
 // add an element to the end of the queue.
 //
 // time: O(1) amortised
-func (q *Queue[T]) Enqueue(v T) {
+func (q *Queue[T]) Push(v T) {
 	if q.size == len(q.data) {
 		q.grow()
 	}
@@ -42,7 +42,7 @@ func (q *Queue[T]) Enqueue(v T) {
 // return false if the queue is empty.
 //
 // time: O(1)
-func (q *Queue[T]) Dequeue() (T, bool) {
+func (q *Queue[T]) Pop() (T, bool) {
 	if q.size == 0 {
 		var zero T
 		return zero, false

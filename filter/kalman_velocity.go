@@ -3,7 +3,7 @@ package filter
 import (
 	"math"
 
-	c "github.com/kamjapowered/bbq/constraints"
+	c "kamjapowered.com/bbq/constraints"
 )
 
 // estimate position and velocity from scalar position measurements

@@ -1,6 +1,6 @@
 package curves
 
-import c "github.com/kamjapowered/bbq/constraints"
+import c "kamjapowered.com/bbq/constraints"
 
 // quadratic ease in
 //

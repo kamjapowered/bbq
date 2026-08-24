@@ -37,7 +37,7 @@ func NewRingQueue[T any](capacity int) *RingQueue[T] {
 // return false if the queue is full
 //
 // time: O(1)
-func (q *RingQueue[T]) Enqueue(v T) bool {
+func (q *RingQueue[T]) Push(v T) bool {
 	if q.size == len(q.data) {
 		return false
 	}
@@ -57,7 +57,7 @@ func (q *RingQueue[T]) Enqueue(v T) bool {
 // return false if the queue is empty
 //
 // time: O(1)
-func (q *RingQueue[T]) Dequeue() (T, bool) {
+func (q *RingQueue[T]) Pop() (T, bool) {
 	if q.size == 0 {
 		var zero T
 		return zero, false

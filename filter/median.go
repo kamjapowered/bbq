@@ -3,7 +3,7 @@ package filter
 import (
 	"slices"
 
-	c "github.com/kamjapowered/bbq/constraints"
+	c "kamjapowered.com/bbq/constraints"
 )
 
 // compute a sliding window median

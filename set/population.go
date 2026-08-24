@@ -1,7 +1,9 @@
 package set
 
 import (
-	"github.com/kamjapowered/bbq/queue"
+	"iter"
+
+	"kamjapowered.com/bbq/queue"
 )
 
 // ======
@@ -65,6 +67,7 @@ func (m Member[Tag]) Zero() bool {
 type Population[Tag any] struct {
 	free  *queue.Queue[uint32]
 	gens  []uint32
+	live  []bool
 	alive uint32
 }
 
@@ -77,6 +80,7 @@ func NewPopulation[Tag any]() *Population[Tag] {
 	return &Population[Tag]{
 		free:  queue.NewQueue[uint32](),
 		gens:  make([]uint32, 0),
+		live:  make([]bool, 0),
 		alive: 0,
 	}
 }
@@ -88,10 +92,12 @@ func (p *Population[Tag]) Add() Member[Tag] {
 	var index uint32
 
 	if !p.free.Empty() {
-		index, _ = p.free.Dequeue()
+		index, _ = p.free.Pop()
+		p.live[index] = true
 	} else {
 		index = uint32(len(p.gens))
 		p.gens = append(p.gens, 1) // start at 1 so member 0 is never produced
+		p.live = append(p.live, true)
 	}
 
 	gen := p.gens[index]
@@ -113,7 +119,8 @@ func (p *Population[Tag]) Remove(m Member[Tag]) bool {
 	}
 
 	p.gens[index]++
-	p.free.Enqueue(index)
+	p.live[index] = false
+	p.free.Push(index)
 
 	p.alive--
 
@@ -140,4 +147,22 @@ func (p *Population[Tag]) Alive() uint32 {
 // time: O(1)
 func (p *Population[Tag]) Capacity() uint32 {
 	return uint32(len(p.gens))
+}
+
+// iterate over the alive members.
+//
+// time: O(c), where c is the capacity
+//
+// do not add or remove members while iterating.
+func (p *Population[Tag]) Iter() iter.Seq[Member[Tag]] {
+	return func(yield func(Member[Tag]) bool) {
+		for index, alive := range p.live {
+			if !alive {
+				continue
+			}
+			if !yield(newMember[Tag](uint32(index), p.gens[index])) {
+				return
+			}
+		}
+	}
 }
