@@ -134,19 +134,15 @@ a container addressable two ways suffixes the axis and keeps the verb.
   `queue`, the type is `Queue` rather than `ArrayQueue`, unless a package holds
   several implementations that a caller picks between
 
-## the one exception
+## the minimum go version
 
-`TypeMap.Put` should be `Set` by the rule above, since it replaces. go 1.27
-mangles a generic method's symbol when the type argument's type name ends with
-the method's own name, so a generic method named `Set` fails to link for any
-caller storing a value that holds a `HashSet`. golang/go#80976.
+go1.27.0 mangles a generic method's symbol when the type argument's type name
+ends with the method's own name, so `TypeMap.Set` fails to link for any caller
+storing a value that holds a `HashSet`. golang/go#80976, fixed in go1.27.1
+(backport golang/go#80981). the method was named `Put` in v0.2.0 to dodge it and
+is `Set` again from v0.3.0, which is why `go.mod` requires go 1.27.1.
 
-`Put` carries the same replace-on-collision meaning and does not collide.
-`hashmap/typemap_test.go` guards it. rename `Put` back to `Set` and the test
-binary fails to link while the bug is open.
-
-`Get`, `Remove` and `Has` are unaffected, because no bbq type name ends in any of
-them. do not add one.
+`hashmap/typemap_test.go` guards it: on go1.27.0 the test binary fails to link.
 
 ## what does not follow this yet
 

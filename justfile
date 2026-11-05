@@ -1,9 +1,12 @@
-version := "0.2.0"
+version := "0.3.0"
 go := "go"
 cache := justfile_directory() / ".cache/go-build"
 
-# everything ci runs, so a green local run means a green ci run
-ci: fmt vet tidy race link
+# everything ci runs, so a green local run means a green ci run. gowork=off so
+# a sibling in the workspace cannot shadow a published dep and hide a build
+# that only works on this machine
+ci:
+	GOWORK=off just fmt vet tidy race link
 
 fmt:
 	@test -z "$(gofmt -l .)" || { gofmt -l .; exit 1; }

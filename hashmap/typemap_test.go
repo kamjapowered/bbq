@@ -7,11 +7,11 @@ import (
 	"kamjapowered.com/bbq/set"
 )
 
-// go 1.27 mangles a generic method's symbol wrongly when the type argument's
+// go1.27.0 mangles a generic method's symbol wrongly when the type argument's
 // type name ends with the method's own name, and emits a relocation to a name
-// nothing defines. golang/go#80976. TypeMap's generic methods are therefore
-// named so that no bbq container collides with them: a method named Set would
-// break every caller storing a value that holds a HashSet.
+// nothing defines. golang/go#80976, fixed in go1.27.1 (backport
+// golang/go#80981). TypeMap.Set storing a value that holds a HashSet is
+// exactly that collision, so this guards the minimum go version in go.mod.
 //
 // the failure is a link error, not a compile error or an assertion, so this
 // test guards by being linked at all.
@@ -20,11 +20,11 @@ type holder struct {
 	list *set.HashSet[string]
 }
 
-func TestPutAcceptsValuesHoldingGenericContainers(t *testing.T) {
+func TestSetAcceptsValuesHoldingGenericContainers(t *testing.T) {
 	tm := hashmap.NewTypeMap()
 
-	if !tm.Put(holder{set: set.NewHashSet[int]()}) {
-		t.Fatal("Put returned false")
+	if !tm.Set(holder{set: set.NewHashSet[int]()}) {
+		t.Fatal("Set returned false")
 	}
 
 	h, ok := tm.Get[holder]()

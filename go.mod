@@ -1,6 +1,6 @@
 module kamjapowered.com/bbq
 
-go 1.27
+go 1.27.1
 
 require golang.org/x/term v0.38.0
 

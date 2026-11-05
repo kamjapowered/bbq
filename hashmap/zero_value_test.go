@@ -21,8 +21,8 @@ func TestZeroValuesAreUsable(t *testing.T) {
 
 	t.Run("TypeMap", func(t *testing.T) {
 		var tm TypeMap
-		if !tm.Put(42) {
-			t.Fatal("Put returned false")
+		if !tm.Set(42) {
+			t.Fatal("Set returned false")
 		}
 
 		v, ok := tm.Get[int]()

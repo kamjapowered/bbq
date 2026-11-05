@@ -15,23 +15,23 @@ type counter int
 
 type tally int
 
-func TestTypeMapPutAndGetAcrossTypes(t *testing.T) {
+func TestTypeMapSetAndGetAcrossTypes(t *testing.T) {
 	tm := NewTypeMap()
 
-	if !tm.Put(7) {
-		t.Fatal("Put(int) returned false")
+	if !tm.Set(7) {
+		t.Fatal("Set(int) returned false")
 	}
-	if !tm.Put("hello") {
-		t.Fatal("Put(string) returned false")
+	if !tm.Set("hello") {
+		t.Fatal("Set(string) returned false")
 	}
-	if !tm.Put(config{name: "a", level: 3}) {
-		t.Fatal("Put(config) returned false")
+	if !tm.Set(config{name: "a", level: 3}) {
+		t.Fatal("Set(config) returned false")
 	}
-	if !tm.Put(counter(1)) {
-		t.Fatal("Put(counter) returned false")
+	if !tm.Set(counter(1)) {
+		t.Fatal("Set(counter) returned false")
 	}
-	if !tm.Put(tally(2)) {
-		t.Fatal("Put(tally) returned false")
+	if !tm.Set(tally(2)) {
+		t.Fatal("Set(tally) returned false")
 	}
 
 	if got := tm.Len(); got != 5 {
@@ -59,7 +59,7 @@ func TestTypeMapPutAndGetAcrossTypes(t *testing.T) {
 
 func TestTypeMapGetMissingType(t *testing.T) {
 	tm := NewTypeMap()
-	tm.Put(1)
+	tm.Set(1)
 
 	p, ok := tm.Get[string]()
 	if ok {
@@ -70,14 +70,14 @@ func TestTypeMapGetMissingType(t *testing.T) {
 	}
 }
 
-func TestTypeMapPutOverwritesSameType(t *testing.T) {
+func TestTypeMapSetOverwritesSameType(t *testing.T) {
 	tm := NewTypeMap()
 
-	tm.Put(config{name: "first", level: 1})
+	tm.Set(config{name: "first", level: 1})
 	old, _ := tm.Get[config]()
 
-	if !tm.Put(config{name: "second", level: 2}) {
-		t.Fatal("Put overwriting a type returned false")
+	if !tm.Set(config{name: "second", level: 2}) {
+		t.Fatal("Set overwriting a type returned false")
 	}
 	if got := tm.Len(); got != 1 {
 		t.Fatalf("Len = %d after overwriting, want 1", got)
@@ -98,7 +98,7 @@ func TestTypeMapPutOverwritesSameType(t *testing.T) {
 
 func TestTypeMapGetReturnsAMutablePointer(t *testing.T) {
 	tm := NewTypeMap()
-	tm.Put(config{name: "a", level: 1})
+	tm.Set(config{name: "a", level: 1})
 
 	p, ok := tm.Get[config]()
 	if !ok {
@@ -114,13 +114,13 @@ func TestTypeMapGetReturnsAMutablePointer(t *testing.T) {
 		t.Fatal("Get returned a different pointer on the second call")
 	}
 
-	// Put copies its argument, so the caller's value is not aliased
+	// Set copies its argument, so the caller's value is not aliased
 	c := config{name: "b", level: 1}
-	tm.Put(c)
+	tm.Set(c)
 	stored, _ := tm.Get[config]()
 	stored.level = 5
 	if c.level != 1 {
-		t.Fatalf("Put aliased the caller's value: %v", c)
+		t.Fatalf("Set aliased the caller's value: %v", c)
 	}
 }
 
@@ -130,11 +130,11 @@ func TestTypeMapRejectsPointerTypes(t *testing.T) {
 	tm := NewTypeMap()
 
 	v := 3
-	if tm.Put(&v) {
-		t.Fatal("Put of a pointer type returned true")
+	if tm.Set(&v) {
+		t.Fatal("Set of a pointer type returned true")
 	}
 	if got := tm.Len(); got != 0 {
-		t.Fatalf("Len = %d after a rejected Put, want 0", got)
+		t.Fatalf("Len = %d after a rejected Set, want 0", got)
 	}
 
 	if p, ok := tm.Get[*int](); ok || p != nil {
@@ -148,8 +148,8 @@ func TestTypeMapRejectsPointerTypes(t *testing.T) {
 	}
 
 	// the base type is unaffected by the rejection
-	if !tm.Put(v) {
-		t.Fatal("Put(int) returned false")
+	if !tm.Set(v) {
+		t.Fatal("Set(int) returned false")
 	}
 	if p, ok := tm.Get[int](); !ok || *p != 3 {
 		t.Fatalf("Get[int] = %v, %v, want 3, true", p, ok)
@@ -161,8 +161,8 @@ func TestTypeMapRejectsPointerTypes(t *testing.T) {
 
 func TestTypeMapHasAndRemove(t *testing.T) {
 	tm := NewTypeMap()
-	tm.Put(1)
-	tm.Put("a")
+	tm.Set(1)
+	tm.Set("a")
 
 	if !tm.Has[int]() || !tm.Has[string]() {
 		t.Fatal("Has missed a stored type")
@@ -202,11 +202,11 @@ func TestTypeMapLenEmptyAndClear(t *testing.T) {
 		t.Fatalf("fresh map: Empty = %v, Len = %d", tm.Empty(), tm.Len())
 	}
 
-	tm.Put(1)
-	tm.Put("a")
+	tm.Set(1)
+	tm.Set("a")
 
 	if tm.Empty() || tm.Len() != 2 {
-		t.Fatalf("after Put: Empty = %v, Len = %d", tm.Empty(), tm.Len())
+		t.Fatalf("after Set: Empty = %v, Len = %d", tm.Empty(), tm.Len())
 	}
 
 	tm.Clear()
@@ -222,7 +222,7 @@ func TestTypeMapLenEmptyAndClear(t *testing.T) {
 	}
 
 	// still usable afterwards
-	tm.Put(config{name: "z"})
+	tm.Set(config{name: "z"})
 	if p, ok := tm.Get[config](); !ok || p.name != "z" {
 		t.Fatalf("Get[config] = %v, %v, want {z 0}, true", p, ok)
 	}
@@ -230,9 +230,9 @@ func TestTypeMapLenEmptyAndClear(t *testing.T) {
 
 func TestTypeMapKeysValuesAndIter(t *testing.T) {
 	tm := NewTypeMap()
-	tm.Put(1)
-	tm.Put("a")
-	tm.Put(config{name: "c"})
+	tm.Set(1)
+	tm.Set("a")
+	tm.Set(config{name: "c"})
 
 	want := []string{"*hashmap.config", "*int", "*string"}
 
@@ -273,9 +273,9 @@ func TestTypeMapKeysValuesAndIter(t *testing.T) {
 
 func TestTypeMapIterEarlyBreakDoesNotMutate(t *testing.T) {
 	tm := NewTypeMap()
-	tm.Put(1)
-	tm.Put("a")
-	tm.Put(config{})
+	tm.Set(1)
+	tm.Set("a")
+	tm.Set(config{})
 
 	for range tm.Iter() {
 		break
@@ -291,8 +291,8 @@ func TestTypeMapIterEarlyBreakDoesNotMutate(t *testing.T) {
 
 func TestTypeMapIterToleratesRemovalWhileIterating(t *testing.T) {
 	tm := NewTypeMap()
-	tm.Put(1)
-	tm.Put("a")
+	tm.Set(1)
+	tm.Set("a")
 
 	// Iter walks a snapshot, so removing during the walk is safe
 	count := 0

@@ -25,18 +25,16 @@ func NewTypeMap() *TypeMap {
 	}
 }
 
-// add stores v under the base type of T
+// Set stores v under the base type of T
 //
 // require T to be a non pointer type
 //
 // store the value as *T
 //
-// named Put rather than Set on purpose. go 1.27 mangles a generic method's
-// symbol wrongly when the type argument's type name ends with the method's own
-// name, and emits a relocation nothing defines, so a method named Set breaks
-// every caller storing a value that holds a HashSet. golang/go#80976, guarded
-// by TestPutAcceptsValuesHoldingGenericContainers
-func (tm *TypeMap) Put[T any](v T) bool {
+// go1.27.0 cannot link this method when T holds a HashSet (golang/go#80976,
+// fixed in go1.27.1), which is why go.mod requires go 1.27.1. guarded by
+// TestSetAcceptsValuesHoldingGenericContainers
+func (tm *TypeMap) Set[T any](v T) bool {
 	rt := reflect.TypeFor[T]()
 	if rt.Kind() == reflect.Pointer {
 		return false
